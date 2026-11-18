@@ -41,7 +41,9 @@ const formattedDate = date
 					<Image image={featuredImage} />
 				</div>
 			) : (
-				<div class="card-placeholder" />
+				<div class="card-placeholder" aria-hidden="true">
+					<span>{title}</span>
+				</div>
 			)
 		}
 		<div class="card-body">
@@ -137,11 +139,28 @@ const formattedDate = date
 		transform: scale(1.03);
 	}
 
+	/* Posts without a featured image: show the title on the surface colour instead of a blank box. */
 	.card-placeholder {
 		aspect-ratio: 16 / 10;
 		border-radius: var(--radius-lg);
 		background: var(--color-surface);
 		margin-bottom: var(--spacing-4);
+		display: flex;
+		align-items: flex-end;
+		padding: var(--spacing-5);
+		overflow: hidden;
+	}
+
+	.card-placeholder span {
+		font-size: var(--font-size-xl);
+		font-weight: var(--font-weight-display);
+		line-height: var(--leading-snug);
+		letter-spacing: var(--tracking-snug);
+		color: var(--color-muted);
+		display: -webkit-box;
+		-webkit-line-clamp: 4;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
 	}
 
 	.card-body {
