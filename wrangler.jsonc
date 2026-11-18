@@ -29,6 +29,10 @@
 	},
 	// Outbound email (magic links, invites) via Cloudflare Email Service
 	"send_email": [{ "name": "EMAIL" }],
+	// Sandboxed plugins run as Dynamic Workers via Worker Loader (Workers Paid)
+	"worker_loaders": [{ "binding": "LOADER" }],
+	// AI Search plugin; Wrangler creates the namespace on first deploy if missing
+	"ai_search_namespaces": [{ "binding": "AI_SEARCH", "namespace": "default" }],
 	// Scheduled publishing, backups, maintenance
 	"triggers": {
 		"crons": ["* * * * *"],
