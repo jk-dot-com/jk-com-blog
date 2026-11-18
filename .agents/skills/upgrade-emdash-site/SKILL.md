@@ -25,8 +25,10 @@ Do not run `wrangler deploy` locally unless Workers Builds is broken.
    Compare `wrangler.jsonc`, `src/worker.ts`, and `astro.config.mjs` against the current
    Cloudflare deploy guide (`mcp__emdash-docs__search_docs`: "deploy to Cloudflare") — the bindings
    and Worker exports change between releases (e.g. `EMDASH_ROOMS` / `EmDashRoom`).
-   Constraints: no Workers Paid features (no sandboxed plugins, no `LOADER` binding, no
-   `sandboxRunner`); D1/R2 resource names in `wrangler.jsonc` must not be renamed.
+   Constraints: the account is on Workers Paid, so keep the sandbox setup (`LOADER` binding,
+   `sandboxRunner: sandbox()`, `PluginBridge` export, plugins under `sandboxed: []`); D1/R2
+   resource names in `wrangler.jsonc` must not be renamed; `emdash-better-auth` stays unregistered
+   unless the user asks.
 5. **Regenerate and verify locally** (one at a time):
    - `pnpm install`
    - `npx wrangler types` (rewrites `worker-configuration.d.ts`)

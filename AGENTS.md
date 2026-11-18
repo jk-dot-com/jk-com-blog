@@ -34,7 +34,9 @@ Agent skills are in `.agents/skills/`. Load them when working on specific tasks:
 To upgrade EmDash and deploy, say "upgrade emdash" (or load the **upgrade-emdash-site** skill). It runs the whole
 process: `upgrade-emdash`, config changes, type generation, `pnpm verify`, commit, push, wait for the Cloudflare
 Workers Build, then `pnpm verify:live`. Deploys happen through Workers Builds on push to `main`, not local
-`wrangler deploy`. No Workers Paid features (no sandboxed plugins). Don't rename the D1/R2 resources in `wrangler.jsonc`.
+`wrangler deploy`. The Cloudflare account is on Workers Paid, so sandboxed plugins are enabled (`sandboxed: []` + `sandbox()` + the `LOADER` binding; `PluginBridge` is exported from `src/worker.ts`). `emdash-better-auth` is installed but intentionally NOT registered, because it would change sign-in. Don't rename the D1/R2 resources in `wrangler.jsonc`.
+
+Cloudflare WAF and bot rules live in the dashboard, not the repo. Verified search engines, feed fetchers, link previews and the Claude and OpenAI crawlers are allowed; other known bots are challenged, and the remaining AI crawlers (rule ref `[CF AI Audit]`) are blocked by user agent. The goal is an open site that isn't abused. Ask before changing those rules.
 
 ## Documentation
 
