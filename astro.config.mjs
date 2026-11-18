@@ -37,8 +37,8 @@ export default defineConfig({
 			],
 			// Sandboxed plugins run in isolated Dynamic Workers (needs Workers Paid + the LOADER binding).
 			sandboxed: [seo, siteHealth, indexnow, webhookNotifier],
+			// The hosted plugin registry is the default catalog once a sandbox runner is configured.
 			sandboxRunner: sandbox(),
-			marketplace: "https://marketplace.emdashcms.com",
 		}),
 	],
 	fonts: [
