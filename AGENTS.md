@@ -106,6 +106,7 @@ The article layout is still the standout feature: a three-column reading view wi
 - To pick up a design-system change: `pnpm add "@jk-dot-com/phosphorous@github:jk-dot-com/jk.com-design-system#<new commit sha>"`, then `pnpm verify`, commit, push. The repo has no release tags yet, so pin by SHA.
 - Webfonts are self-hosted through Astro in `astro.config.mjs` under `fonts:` (Space Grotesk on `--font-heading`, JetBrains Mono on `--font-mono`), and `Base.astro` renders them with `<Font>`. Body copy has no webfont.
 - `src/components/ArticleCode.astro` owns code-block and mermaid rendering so it can use Phosphorous tokens.
+- The header's `JK.com` mark (imported from the design-system package) links back to https://jaysonknight.com, and the footer repeats the main site's links and socials. Keep these in step with the main site's header and footer.
 - Accessibility: Phosphorous's "ghost" text colour is too faint for small meta text, so `--color-muted` is mapped to a lighter mix. Keep body and meta text at WCAG AA contrast.
 
 ## What not to do

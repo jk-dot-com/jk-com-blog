@@ -9,6 +9,7 @@ import {
 import { createPublicPageContext } from "emdash/page";
 import LiveSearch from "emdash/ui/search";
 import { Font } from "astro:assets";
+import jkMarkUrl from "@jk-dot-com/phosphorous/assets/favicon.svg?url";
 import { resolveBlogSiteIdentity } from "../utils/site-identity";
 import "../styles/tokens.css";
 import "../styles/theme.css";
@@ -52,6 +53,10 @@ const menu = await getMenu("primary");
 // it'll render in the footer's "Connect" column. Otherwise that column
 // just shows RSS, avoiding duplication with the "Navigate" column above.
 const socialMenu = await getMenu("social");
+
+// The main website this blog belongs to; header and footer link back to it.
+const MAIN_SITE = "https://jaysonknight.com";
+const year = new Date().getFullYear();
 
 // Fetch pages for footer
 const { entries: pages } = await getEmDashCollection("pages");
@@ -103,6 +108,10 @@ const isLoggedIn = !!Astro.locals.user;
 		<EmDashBodyStart page={pageCtx} />
 		<header class="site-header">
 			<nav class="nav">
+				<a href={MAIN_SITE} class="main-site-link" aria-label="Back to JK.com, the main website">
+					<img src={jkMarkUrl} alt="" width="28" height="28" />
+					<span class="main-site-link-text">JK<span class="gradient-text">.com</span></span>
+				</a>
 				<a href="/" class="site-title">
 					{siteLogo
 						? <img src={siteLogo.url} alt={siteLogo.alt || siteTitle} class="site-logo-img" />
@@ -168,6 +177,12 @@ const isLoggedIn = !!Astro.locals.user;
 									</li>
 								))
 							}
+							<li><a href={MAIN_SITE}>JK.com (main site)</a></li>
+							<li><a href={`${MAIN_SITE}/#about`}>About</a></li>
+							<li><a href={`${MAIN_SITE}/#services`}>Services</a></li>
+							<li><a href={`${MAIN_SITE}/#portfolio`}>Portfolio</a></li>
+							<li><a href={`${MAIN_SITE}/#contact`}>Contact</a></li>
+							<li><a href={`${MAIN_SITE}/privacy`}>Privacy</a></li>
 						</ul>
 					</div>
 					<div class="footer-nav">
@@ -190,6 +205,9 @@ const isLoggedIn = !!Astro.locals.user;
 									</li>
 								))
 							}
+							<li><a href="https://github.com/jaypatrick" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+							<li><a href="https://www.linkedin.com/in/jaysonknight" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
+							<li><a href="https://calendly.com/jaysonknight" target="_blank" rel="noopener noreferrer">Book Me</a></li>
 							<li><a href="/rss.xml">RSS Feed</a></li>
 						</ul>
 					</div>
@@ -199,7 +217,7 @@ const isLoggedIn = !!Astro.locals.user;
 				</div>
 				<div class="footer-bottom">
 					<p class="footer-copyright">
-						Powered by <a href="https://emdashcms.com">EmDash</a>
+						© {year} Jayson Knight · <a href={MAIN_SITE}>JK.com</a> · Powered by <a href="https://emdashcms.com">EmDash</a>
 					</p>
 					<div class="theme-switcher">
 						<button
