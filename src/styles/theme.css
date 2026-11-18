@@ -1,30 +1,93 @@
 /*
-  theme.css -- your theme overrides. This is the file to edit to
-  retheme the site.
+  theme.css -- Phosphorous theme (dark only).
 
-  Every design token lives in src/styles/tokens.css (colors, type
-  scale, spacing, layout, shadows) with its default value. Override any
-  of them here: declarations in this file are unlayered, so they always
-  beat the @layer base defaults in tokens.css.
+  The design tokens come from the Phosphorous design system
+  (github.com/jk-dot-com/jk.com-design-system), installed as the
+  @jk-dot-com/phosphorous dependency and pinned to a commit in package.json.
+  Change tokens THERE, then bump the pin (see AGENTS.md); never copy values here.
 
-  Colors are defined with light-dark(). Overriding with a plain color
-  changes light and dark mode at once; use light-dark(<light>, <dark>)
-  to set different values per mode.
+  fonts.css is deliberately not imported: it loads Google Fonts at runtime.
+  Space Grotesk and JetBrains Mono are self-hosted through Astro's font
+  system in astro.config.mjs instead.
 
-  Webfonts are loaded in astro.config.mjs (--font-body, --font-mono).
-  Swap the loaded font there; use overrides here for system fonts or a
-  separate heading face.
-
-  Example:
-
-  :root {
-    --color-brand: light-dark(#0f766e, #2dd4bf);
-    --font-heading: "Iowan Old Style", Georgia, serif;
-    --radius: 8px;
-  }
+  Declarations here are unlayered, so they beat the @layer base defaults in
+  tokens.css. Phosphorous shares several token names with EmDash (--color-bg,
+  --color-surface, --color-text, --color-border, --font-heading, ...), so those
+  take effect automatically; the block below maps the remaining EmDash names.
 */
 
+@import "@jk-dot-com/phosphorous/tokens/colors.css";
+@import "@jk-dot-com/phosphorous/tokens/typography.css";
+@import "@jk-dot-com/phosphorous/tokens/spacing.css";
+@import "@jk-dot-com/phosphorous/tokens/effects.css";
+@import "@jk-dot-com/phosphorous/tokens/base.css";
+
+/* Dark only. Pinned on every variant so a stored "light" theme cookie can't flip it. */
+:root,
+:root.light,
+:root.dark {
+	color-scheme: dark;
+}
+
+/* Map the EmDash token names that Phosphorous doesn't define. */
 :root {
+	--color-bg-subtle: var(--color-surface);
+	--color-border-subtle: color-mix(in srgb, var(--color-border) 55%, transparent);
+	--color-text-secondary: var(--color-text-dim);
+	/* Phosphorous's "ghost" text (#475569) is ~3:1 on the page ground, too low for dates and meta labels. */
+	--color-muted: color-mix(in srgb, var(--color-text-dim) 72%, var(--color-bg));
+
+	--color-brand: var(--color-cyan);
+	--color-brand-hover: var(--color-cyan-glow);
+	--color-on-brand: var(--color-bg);
+	--color-brand-ring: var(--tint-cyan-edge);
+
+	--font-weight-heading: var(--weight-semibold);
+	--font-weight-display: var(--weight-bold);
+	--tracking-wider: var(--tracking-widest);
+
+	--radius: var(--radius-sm);
+	--shadow-sm: 0 1px 8px rgba(0, 0, 0, 0.5);
+	--shadow-lg: var(--shadow-panel);
+	--wide-width: var(--max-content);
+
+	--emdash-search-bg: var(--color-surface);
+	--emdash-search-hover: var(--tint-cyan);
+	--emdash-search-highlight: var(--color-cyan-glow);
+}
+
+/* Dark only: hide the light/dark/system switcher. */
+.theme-switcher {
+	display: none !important;
+}
+
+/* The faint CRT raster that sits behind every Phosphorous page. */
+body {
+	background-image:
+		linear-gradient(var(--grid-line) 1px, transparent 1px),
+		linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+	background-size: var(--grid-size) var(--grid-size);
+}
+
+/* Post cards: glow instead of shadow, border brightens on hover. */
+.post-card .card-link .card-image,
+.post-card .card-link .card-placeholder {
+	border: 1px solid var(--color-border);
+	transition:
+		border-color var(--duration-normal) ease,
+		box-shadow var(--duration-normal) ease;
+}
+
+.post-card .card-link:hover .card-image,
+.post-card .card-link:hover .card-placeholder {
+	border-color: var(--color-cyan-dim);
+	box-shadow: var(--glow-cyan-sm);
+}
+
+/* Inline code reads as phosphor-cyan on a faint tint; code blocks are styled in ArticleCode. */
+.article-content code:not(pre code) {
+	color: var(--color-cyan);
+	background: var(--tint-cyan);
 }
 
 .nav-admin {

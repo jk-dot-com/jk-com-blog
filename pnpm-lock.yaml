@@ -29,6 +29,9 @@ importers:
       '@emdash-cms/plugin-webhook-notifier':
         specifier: ^0.2.3
         version: 0.2.3(emdash@1.5.0(@astrojs/react@6.0.6(@types/node@26.6.6)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(esbuild@0.28.2)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(yaml@2.9.1))(@atcute/cbor@2.3.8(@atcute/cid@2.5.0))(@atcute/cid@2.5.0)(@atcute/identity@2.0.2(@atcute/lexicons@2.1.1)(typescript@6.0.3))(@date-fns/tz@1.5.0)(@floating-ui/dom@1.8.0)(@tiptap/extensions@3.32.0(@tiptap/core@3.32.0(@tiptap/pm@3.32.0))(@tiptap/pm@3.32.0))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(astro@7.4.12(@types/node@26.6.6)(esbuild@0.28.2)(yaml@2.9.1))(date-fns@4.4.0)(echarts@6.1.0)(prosemirror-model@1.25.13)(prosemirror-state@1.4.4)(prosemirror-view@1.42.9)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@6.0.3))
+      '@jk-dot-com/phosphorous':
+        specifier: github:jk-dot-com/jk.com-design-system#13bb1c7ff7b94969dece1f11e488e0443258f5c4
+        version: https://codeload.github.com/jk-dot-com/jk.com-design-system/tar.gz/13bb1c7ff7b94969dece1f11e488e0443258f5c4(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@moorage/plugin-seo':
         specifier: ^0.3.1
         version: 0.3.1(emdash@1.5.0(@astrojs/react@6.0.6(@types/node@26.6.6)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(esbuild@0.28.2)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(yaml@2.9.1))(@atcute/cbor@2.3.8(@atcute/cid@2.5.0))(@atcute/cid@2.5.0)(@atcute/identity@2.0.2(@atcute/lexicons@2.1.1)(typescript@6.0.3))(@date-fns/tz@1.5.0)(@floating-ui/dom@1.8.0)(@tiptap/extensions@3.32.0(@tiptap/core@3.32.0(@tiptap/pm@3.32.0))(@tiptap/pm@3.32.0))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(astro@7.4.12(@types/node@26.6.6)(esbuild@0.28.2)(yaml@2.9.1))(date-fns@4.4.0)(echarts@6.1.0)(prosemirror-model@1.25.13)(prosemirror-state@1.4.4)(prosemirror-view@1.42.9)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@6.0.3))
@@ -1423,6 +1426,18 @@ packages:
 
   '@internationalized/string@3.2.10':
     resolution: {integrity: sha512-PDx6//vHSpRnHfxqMqto11zQvhsaU74O3mKv2F/0eicGZcl9NLjQmGlbHz/LsJh5tLKp4A4L7ZVTzN1/MmMTvA==}
+
+  '@jk-dot-com/phosphorous@https://codeload.github.com/jk-dot-com/jk.com-design-system/tar.gz/13bb1c7ff7b94969dece1f11e488e0443258f5c4':
+    resolution: {gitHosted: true, integrity: sha512-VuCTbJCTDhQ70lF5UZMSIDUmbzhfOVitGGZta5lqz70po2byi4lg6I+Olm4RdwrQ/3ftJlUSfa5EJPGvK0mLaA==, tarball: https://codeload.github.com/jk-dot-com/jk.com-design-system/tar.gz/13bb1c7ff7b94969dece1f11e488e0443258f5c4}
+    version: 1.0.0
+    peerDependencies:
+      react: '>=18'
+      react-dom: '>=18'
+    peerDependenciesMeta:
+      react:
+        optional: true
+      react-dom:
+        optional: true
 
   '@jridgewell/gen-mapping@0.3.13':
     resolution: {integrity: sha512-2kkt/7niJ6MgEPxF0bYdQ6etZaA+fQvDcLKckhy1yIQOzaoKjBBjSj63/aLVjYE3qhRt5dvM+uUyfCg6UKCBbA==}
@@ -6517,6 +6532,11 @@ snapshots:
   '@internationalized/string@3.2.10':
     dependencies:
       '@swc/helpers': 0.5.24
+
+  '@jk-dot-com/phosphorous@https://codeload.github.com/jk-dot-com/jk.com-design-system/tar.gz/13bb1c7ff7b94969dece1f11e488e0443258f5c4(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
+    optionalDependencies:
+      react: 19.2.4
+      react-dom: 19.2.4(react@19.2.4)
 
   '@jridgewell/gen-mapping@0.3.13':
     dependencies:

@@ -44,16 +44,16 @@ export default defineConfig({
 	fonts: [
 		{
 			provider: fontProviders.google(),
-			name: "Inter",
-			cssVariable: "--font-body",
+			name: "Space Grotesk",
+			cssVariable: "--font-heading",
 			weights: [400, 500, 600, 700],
-			fallbacks: ["sans-serif"],
+			fallbacks: ["system-ui", "sans-serif"],
 		},
 		{
 			provider: fontProviders.google(),
 			name: "JetBrains Mono",
 			cssVariable: "--font-mono",
-			weights: [400, 500],
+			weights: [400, 500, 700],
 			fallbacks: ["monospace"],
 		},
 	],

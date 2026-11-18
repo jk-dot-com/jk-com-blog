@@ -23,6 +23,7 @@
     "@emdash-cms/plugin-embeds": "^0.1.59",
     "@emdash-cms/plugin-forms": "^0.2.6",
     "@emdash-cms/plugin-webhook-notifier": "^0.2.3",
+    "@jk-dot-com/phosphorous": "github:jk-dot-com/jk.com-design-system#13bb1c7ff7b94969dece1f11e488e0443258f5c4",
     "@moorage/plugin-seo": "^0.3.1",
     "@moorage/plugin-site-health": "^0.4.0",
     "@tagperfect/emdash-plugin-indexnow": "^1.2.6",
