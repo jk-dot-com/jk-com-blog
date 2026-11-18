@@ -19,9 +19,8 @@ const languageClass = node.language ? `language-${node.language}` : undefined;
 		node.code && (
 			<div class="article-code">
 				{node.filename && <div class="article-code-filename">{node.filename}</div>}
-				<pre class={languageClass}>
-					<code class={languageClass}>{node.code}</code>
-				</pre>
+				{/* No whitespace between <pre> and <code>: it would render as a blank first line. */}
+				<pre class={languageClass}><code class={languageClass}>{node.code}</code></pre>
 			</div>
 		)
 	)
@@ -44,18 +43,20 @@ const languageClass = node.language ? `language-${node.language}` : undefined;
 		padding: var(--spacing-2) var(--spacing-4);
 	}
 
-	.article-content .article-code pre {
+	/* div.article-code (not just .article-code) so these beat the page's own `.article-content pre` rule. */
+	.article-content div.article-code pre {
 		margin: 0;
 		background: var(--color-card);
 		border: 1px solid var(--color-border);
 		border-radius: var(--radius-lg);
+		text-align: left;
 	}
 
-	.article-content .article-code-filename + pre {
+	.article-content div.article-code .article-code-filename + pre {
 		border-radius: 0 0 var(--radius-lg) var(--radius-lg);
 	}
 
-	.article-content .article-code pre code {
+	.article-content div.article-code pre code {
 		color: var(--color-text);
 		background: none;
 		font-size: var(--text-sm);
@@ -71,7 +72,7 @@ const languageClass = node.language ? `language-${node.language}` : undefined;
 		border: 0;
 		padding: 0;
 		text-align: center;
-		font-family: var(--font-mono);
+		font-family: var(--font-body);
 		overflow-x: auto;
 	}
 </style>
@@ -81,11 +82,13 @@ const languageClass = node.language ? `language-${node.language}` : undefined;
 	const nodes = Array.from(document.querySelectorAll<HTMLElement>("pre.mermaid"));
 	if (nodes.length) {
 		const { default: mermaid } = await import("mermaid");
+		// Mermaid measures label text when it renders; wait for webfonts so boxes aren't sized for a fallback font.
+		await document.fonts.ready;
 		mermaid.initialize({
 			startOnLoad: false,
 			theme: "dark",
 			securityLevel: "strict",
-			fontFamily: "inherit",
+			fontFamily: '"Space Grotesk", system-ui, sans-serif',
 			themeVariables: { primaryColor: "#0d1117", primaryBorderColor: "#00d4ff", lineColor: "#94a3b8", primaryTextColor: "#e2e8f0" },
 		});
 		await mermaid.run({ nodes });

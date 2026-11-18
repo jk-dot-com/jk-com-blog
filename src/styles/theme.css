@@ -84,6 +84,14 @@ body {
 	box-shadow: var(--glow-cyan-sm);
 }
 
+/* Recent-posts widget: put the date on its own line under the title. */
+.widget-recent-posts__date {
+	display: block;
+	margin-top: var(--spacing-1);
+	font-size: var(--font-size-sm);
+	color: var(--color-muted);
+}
+
 /* Inline code reads as phosphor-cyan on a faint tint; code blocks are styled in ArticleCode. */
 .article-content code:not(pre code) {
 	color: var(--color-cyan);
