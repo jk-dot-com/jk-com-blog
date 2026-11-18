@@ -40,9 +40,22 @@ Workers Build, then `pnpm verify:live`. Deploys happen through Workers Builds on
 
 **Always check the EmDash docs MCP server (`mcp__emdash-docs__search_docs`) before changing EmDash config, bindings, Worker entry points, plugins, deployment, or upgrade steps -- without being asked.** Don't rely on memory or training data.
 
+There are two separate MCP servers: `emdash-docs` (documentation, project `.mcp.json`) and `emdash-site` (this live site's own MCP server at `https://blog.jaysonknight.com/_emdash/api/mcp`, user-scope, OAuth; reads and edits live content and schema). Prefer `emdash-site` over raw D1 queries for content work, since it goes through EmDash's revision and validation layer.
+
 The EmDash docs are available as an MCP server at `https://docs.emdashcms.com/mcp`. When you need to verify an API, hook, config option, field type, or pattern, call `search_docs` against the live documentation rather than relying on training-data recall. The docs reflect current behaviour; assumptions may not.
 
 This template ships with `.mcp.json`, `.cursor/mcp.json`, and `.vscode/mcp.json` so Claude Code, Cursor, and VS Code auto-discover the docs server. Other tools (OpenCode, Windsurf, etc.) need a manual one-time setup -- see [docs.emdashcms.com/docs-mcp](https://docs.emdashcms.com/docs-mcp).
+
+## Live data and content repair
+
+- Remote D1 id is in `wrangler.jsonc`; tables: `ec_posts` (content is Portable Text JSON), `media`, `revisions`. Read-only inspection works via the Cloudflare MCP `d1_database_query`.
+- Code blocks are `{_type:"code", code, language?, filename?}`; images are `{provider,id,src,alt}` with src `/_emdash/api/media/file/<storage_key>`.
+- WordPress import flattened some posts (stray CSS/script text, whole articles in one paragraph, code newlines lost). Check for blocks over 3000 chars before trusting imported content.
+
+## Windows gotchas
+
+- Git Bash rewrites args starting with `/` (curl paths); use `MSYS_NO_PATHCONV=1` or a node script.
+- Stray `astro dev`/`workerd` processes exhaust RAM and crash `astro check`; stop them with PowerShell `Stop-Process`.
 
 ## Rules
 

@@ -27,6 +27,8 @@
 	"exports": {
 		"EmDashRoom": { "type": "durable-object", "storage": "sqlite" },
 	},
+	// Outbound email (magic links, invites) via Cloudflare Email Service
+	"send_email": [{ "name": "EMAIL" }],
 	// Scheduled publishing, backups, maintenance
 	"triggers": {
 		"crons": ["* * * * *"],
