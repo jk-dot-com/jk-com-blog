@@ -27,6 +27,14 @@ Agent skills are in `.agents/skills/`. Load them when working on specific tasks:
 - **building-emdash-site** -- Querying content, rendering Portable Text, schema design, seed files, site features (menus, widgets, search, SEO, comments, bylines). Start here.
 - **creating-plugins** -- Building EmDash plugins with hooks, storage, admin UI, API routes, and Portable Text block types.
 - **emdash-cli** -- CLI commands for content management, seeding, type generation, and visual editing flow.
+- **upgrade-emdash-site** -- Full upgrade, deploy, and verification runbook for this site.
+
+## Upgrading and deploying
+
+To upgrade EmDash and deploy, say "upgrade emdash" (or load the **upgrade-emdash-site** skill). It runs the whole
+process: `upgrade-emdash`, config changes, type generation, `pnpm verify`, commit, push, wait for the Cloudflare
+Workers Build, then `pnpm verify:live`. Deploys happen through Workers Builds on push to `main`, not local
+`wrangler deploy`. No Workers Paid features (no sandboxed plugins). Don't rename the D1/R2 resources in `wrangler.jsonc`.
 
 ## Documentation
 
