@@ -42,7 +42,9 @@ const {
 	author,
 	content,
 } = Astro.props;
-const { siteTitle, siteTagline, siteLogo } = resolveBlogSiteIdentity(await getSiteSettings());
+// The boxed legacy logo (siteLogo) is deliberately not rendered: the header and footer use the
+// JK mark plus text, like jaysonknight.com.
+const { siteTitle, siteTagline } = resolveBlogSiteIdentity(await getSiteSettings());
 // If title already includes site title (from getSeoMeta), use as-is
 const fullTitle = title.includes(siteTitle) ? title : `${title} — ${siteTitle}`;
 
@@ -57,6 +59,13 @@ const socialMenu = await getMenu("social");
 // The main website this blog belongs to; header and footer link back to it.
 const MAIN_SITE = "https://jaysonknight.com";
 const year = new Date().getFullYear();
+
+// Marks the current section in the nav, like the main site's active link.
+const currentPath = Astro.url.pathname.replace(/\/+$/, "") || "/";
+const isActive = (url: string) => {
+	const target = url.replace(/\/+$/, "") || "/";
+	return target === "/" ? currentPath === "/" : currentPath === target || currentPath.startsWith(`${target}/`);
+};
 
 // Fetch pages for footer
 const { entries: pages } = await getEmDashCollection("pages");
@@ -107,18 +116,16 @@ const isLoggedIn = !!Astro.locals.user;
 	<body>
 		<EmDashBodyStart page={pageCtx} />
 		<header class="site-header">
-			<nav class="nav">
-				<a href={MAIN_SITE} class="main-site-link" aria-label="Back to JK.com, the main website">
-					<img src={jkMarkUrl} alt="" width="28" height="28" />
-					<span class="main-site-link-text">JK<span class="gradient-text">.com</span></span>
-				</a>
-				<a href="/" class="site-title">
-					{siteLogo
-						? <img src={siteLogo.url} alt={siteLogo.alt || siteTitle} class="site-logo-img" />
-						: siteTitle
-					}
-				</a>
-				<div class="nav-right">
+			<nav class="nav" aria-label="Main navigation">
+					<div class="brand">
+						<a href={MAIN_SITE} class="brand-main" aria-label="JK.com, the main website">
+							<img src={jkMarkUrl} alt="" width="40" height="40" class="brand-mark" />
+							<span class="brand-text">JK<span class="gradient-text">.com</span></span>
+						</a>
+						<span class="brand-sep" aria-hidden="true">/</span>
+						<a href="/" class="brand-blog">{siteTitle}</a>
+					</div>
+					<div class="nav-right">
 					<LiveSearch
 						placeholder="Search..."
 						class="site-search"
@@ -130,9 +137,15 @@ const isLoggedIn = !!Astro.locals.user;
 					<div class="nav-links">
 						{
 							menu?.items.map((item) => (
-								<a href={item.url} target={item.target}>
-									{item.label}
-								</a>
+								<a
+										href={item.url}
+										target={item.target}
+										class:list={["nav-link", { "is-active": isActive(item.url) }]}
+										aria-current={isActive(item.url) ? "page" : undefined}
+									>
+										{item.label}
+										{isActive(item.url) && <span class="nav-cursor" aria-hidden="true">_</span>}
+									</a>
 							))
 						}
 					</div>
@@ -156,10 +169,8 @@ const isLoggedIn = !!Astro.locals.user;
 				<div class="footer-grid">
 					<div class="footer-brand">
 						<a href="/" class="footer-logo">
-							{siteLogo
-								? <img src={siteLogo.url} alt={siteLogo.alt || siteTitle} class="footer-logo-img" />
-								: siteTitle
-							}
+							<img src={jkMarkUrl} alt="" width="28" height="28" class="footer-mark" />
+							<span>{siteTitle}</span>
 						</a>
 						<p class="footer-tagline">{siteTagline}</p>
 					</div>
@@ -483,26 +494,61 @@ const isLoggedIn = !!Astro.locals.user;
 				height: var(--nav-height);
 			}
 
-			.site-title {
-				font-size: var(--font-size-lg);
-				font-weight: 600;
-				color: var(--color-text);
-				text-decoration: none;
-				letter-spacing: var(--tracking-snug);
-			}
+			.brand {
+					display: flex;
+					align-items: center;
+					gap: var(--spacing-3);
+					min-width: 0;
+				}
 
-			.site-title:hover {
-				color: var(--color-brand);
-			}
+				.brand-main {
+					display: flex;
+					align-items: center;
+					gap: var(--spacing-3);
+					text-decoration: none;
+				}
 
-			.site-logo-img {
-				height: 48px;
-				width: auto;
-				display: block;
-				margin: -8px 0;
-			}
+				.brand-mark {
+					width: 40px;
+					height: 40px;
+					display: block;
+					filter: drop-shadow(0 0 6px rgba(0, 212, 255, 0.6));
+					transition: transform 0.3s ease;
+				}
 
-			.nav-right {
+				.brand-main:hover .brand-mark {
+					transform: scale(1.08);
+				}
+
+				.brand-text {
+					font-family: var(--font-heading);
+					font-weight: 900;
+					font-size: var(--font-size-lg);
+					letter-spacing: -0.02em;
+					color: var(--color-text);
+				}
+
+				.brand-sep {
+					font-family: var(--font-mono);
+					color: var(--color-text-ghost);
+				}
+
+				.brand-blog {
+					font-family: var(--font-mono);
+					font-size: 0.75rem;
+					letter-spacing: 0.08em;
+					text-transform: uppercase;
+					color: var(--color-muted);
+					text-decoration: none;
+					white-space: nowrap;
+					transition: color 0.2s ease;
+				}
+
+				.brand-blog:hover {
+					color: var(--color-cyan);
+				}
+
+.nav-right {
 				display: flex;
 				align-items: center;
 				gap: var(--spacing-6);
@@ -515,17 +561,61 @@ const isLoggedIn = !!Astro.locals.user;
 				font-size: var(--font-size-sm);
 			}
 
-			.nav-links a {
-				text-decoration: none;
-				color: var(--color-text);
-				transition: color var(--transition-fast);
-			}
+			.nav-link {
+					position: relative;
+					font-family: var(--font-heading);
+					font-weight: 500;
+					color: var(--color-text-dim);
+					text-decoration: none;
+					transition: color 0.2s ease;
+				}
 
-			.nav-links a:hover {
-				color: var(--color-brand);
-			}
+				.nav-link::after {
+					content: "";
+					position: absolute;
+					left: 0;
+					bottom: -4px;
+					height: 1px;
+					width: 0;
+					background: var(--color-cyan);
+					transition: width 0.3s ease;
+				}
 
-			.nav-admin {
+				.nav-link:hover {
+					color: var(--color-text);
+				}
+
+				.nav-link:hover::after {
+					width: 100%;
+				}
+
+				.nav-link.is-active {
+					color: var(--color-text);
+				}
+
+				.nav-link.is-active::after {
+					width: 100%;
+					background: var(--color-purple);
+				}
+
+				.nav-cursor {
+					color: var(--color-cyan);
+					animation: nav-blink 1s steps(2, start) infinite;
+				}
+
+				@keyframes nav-blink {
+					to {
+						visibility: hidden;
+					}
+				}
+
+				@media (prefers-reduced-motion: reduce) {
+					.nav-cursor {
+						animation: none;
+					}
+				}
+
+.nav-admin {
 				font-size: var(--font-size-sm);
 				color: var(--color-text-secondary);
 				text-decoration: none;
@@ -667,6 +757,10 @@ const isLoggedIn = !!Astro.locals.user;
 			}
 
 			.footer-logo {
+				display: inline-flex;
+				align-items: center;
+				gap: var(--spacing-3);
+				font-family: var(--font-heading);
 				font-size: var(--font-size-lg);
 				font-weight: 600;
 				color: var(--color-text);
@@ -674,12 +768,14 @@ const isLoggedIn = !!Astro.locals.user;
 				letter-spacing: var(--tracking-snug);
 			}
 
-			.footer-logo-img {
-				height: 24px;
-				width: auto;
-			}
+			.footer-mark {
+					width: 28px;
+					height: 28px;
+					display: block;
+					filter: drop-shadow(0 0 5px rgba(0, 212, 255, 0.5));
+				}
 
-			.footer-tagline {
+.footer-tagline {
 				margin-top: var(--spacing-3);
 				font-size: var(--font-size-sm);
 				color: var(--color-muted);
@@ -824,14 +920,17 @@ const isLoggedIn = !!Astro.locals.user;
 					padding: var(--spacing-3) var(--spacing-4);
 				}
 
-				.site-title {
-					grid-column: 1;
-					grid-row: 1;
-					font-size: var(--font-size-base);
-					min-width: 0;
-				}
+					.brand {
+						grid-column: 1;
+						grid-row: 1;
+					}
 
-				.nav-right {
+					.brand-blog,
+					.brand-sep {
+						display: none;
+					}
+
+.nav-right {
 					grid-column: 1 / -1;
 					grid-row: 2;
 					display: grid;
