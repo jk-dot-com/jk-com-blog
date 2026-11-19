@@ -31,3 +31,10 @@ Thumbs.db
 
 # Claude Code per-user settings (shared .claude/settings.json stays tracked)
 .claude/settings.local.json
+
+# Wayback import tooling: regenerated or large working files
+scripts/wayback/data/crawl.json
+scripts/wayback/data/audit.json
+scripts/wayback/data/out/
+scripts/wayback/data/index.json
+scripts/wayback/data/recoverable2.json

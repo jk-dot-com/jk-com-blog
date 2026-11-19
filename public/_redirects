@@ -1169,3 +1169,10 @@
 /jayson/archive/tags/Yoga/default.aspx /category/yoga 301
 /jayson/contact.aspx / 301
 /jayson/default.aspx /posts 301
+
+# Sitemap URLs from earlier versions of the site that search engines still hold
+/sitemap-1.xml /sitemap.xml 301
+/sitemap_index.xml /sitemap.xml 301
+/wp-sitemap.xml /sitemap.xml 301
+/post-sitemap.xml /sitemap-posts.xml 301
+/page-sitemap.xml /sitemap-pages.xml 301

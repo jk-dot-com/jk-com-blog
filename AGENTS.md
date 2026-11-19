@@ -69,6 +69,12 @@ This template ships with `.mcp.json`, `.cursor/mcp.json`, and `.vscode/mcp.json`
 - Cloudflare Bot Fight Mode challenges headless browsers and can't be skipped by a rule on the Free plan: turn it off (`PUT /zones/<id>/bot_management {fight_mode:false}`) for the run, then set it back to `true` immediately. Say so in the report.
 - Listing pages (`/posts`, `/category/*`, `/tag/*`) are paginated with `?page=N` (24 per page, `src/utils/pagination.ts` and `Pagination.astro`); page 2+ canonicalize to themselves and a page past the end is a 404.
 
+## Audits and repair tools
+
+- `scripts/wayback/` holds the tools that rebuilt the 834 imported posts from the Internet Archive and keep them healthy; start with its README. `crawl.js` crawls the live blog (pages, internal links, assets, meta tags, every external link); `fix-links.js` maps dead external links to Wayback snapshots; `fix-content.js` regenerates imported post bodies from the committed source (`data/out2/_all.json`) and **overwrites admin edits to imported posts**, so run it with `--dry` or `--slug` first.
+- The sidebar Archives widget (`core:archives`) links to `/archives/YYYY/MM`; `src/pages/archives/[year]/[month].astro` serves those. If a widget link ever 404s, `crawl.js` reports it as `internal-link-404`.
+- Images: `siteUrl` in `astro.config.mjs` is what lets Astro resize the site's own media at build time (the IMAGES binding does the work, Free plan 5,000 unique transforms a month). Without it every featured image ships at full size. Pass `scaledTo(image, maxWidth)` (`src/utils/image-size.ts`) to `<Image>` so each use asks for the size it displays.
+
 ## Windows gotchas
 
 - Git Bash rewrites args starting with `/` (curl paths); use `MSYS_NO_PATHCONV=1` or a node script.

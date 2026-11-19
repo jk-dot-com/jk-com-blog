@@ -1,0 +1,9 @@
+{
+  "name": "wayback-tools",
+  "private": true,
+  "description": "Rebuild and audit the imported blog posts",
+  "type": "commonjs",
+  "dependencies": {
+    "linkedom": "^0.18.15"
+  }
+}
