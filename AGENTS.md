@@ -122,6 +122,8 @@ The article layout is still the standout feature: a three-column reading view wi
 - Webfonts are self-hosted through Astro in `astro.config.mjs` under `fonts:` (Space Grotesk on `--font-heading`, JetBrains Mono on `--font-mono`), and `Base.astro` renders them with `<Font>`. Body copy has no webfont.
 - `src/components/ArticleCode.astro` owns code-block and mermaid rendering so it can use Phosphorous tokens.
 - The header's `JK.com` mark (imported from the design-system package) links back to https://jaysonknight.com, and the footer repeats the main site's links and socials. Keep these in step with the main site's header and footer.
+- Tag and category links are Phosphorous chips (mono, uppercase, cyan on a faint tint, glow on hover), styled once in `src/styles/theme.css`. Posts imported from the old blog only have categories, so `src/utils/chips.ts` falls back to a post's categories on cards and lists, and post pages show a "Filed under" block.
+- Use design tokens, not literals: glows come from `--glow-cyan*`/`--filter-logo-glow` (never black or gray drop shadows; `--shadow-sm` is mapped to the cyan glow), type from `--text-*`/`--tracking-mono`, motion from `--duration-*`, and honour `prefers-reduced-motion`. No emoji in UI chrome.
 - Accessibility: Phosphorous's "ghost" text colour is too faint for small meta text, so `--color-muted` is mapped to a lighter mix. Keep body and meta text at WCAG AA contrast.
 
 ## What not to do
