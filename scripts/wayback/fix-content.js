@@ -26,6 +26,9 @@ const OLD_HOST = /^https?:\/\/(?:www\.)?(?:blog\.)?jaysonknight\.com(?::\d+)?(\/
 // dead external links (fix-links.js): the Wayback snapshot nearest the post's date, or "" to drop the link and keep its text
 const LINKMAP_FILE = T + "/link-map.json";
 const LINKMAP = fs.existsSync(LINKMAP_FILE) ? JSON.parse(fs.readFileSync(LINKMAP_FILE)) : {};
+// alt text written by hand for imported images that had none (source URL -> description)
+const ALT_FILE = T + "/alt-text.json";
+const ALT_TEXT = fs.existsSync(ALT_FILE) ? JSON.parse(fs.readFileSync(ALT_FILE)) : {};
 const OLD_RELATIVE = /^\/(blog|jayson|files)\//i;
 const ZERO = /^https?:\/\/zerotrilogy\.gotdns\.com\//i;
 
@@ -90,7 +93,7 @@ function buildContent(rec) {
 			let abs; try { abs = new URL(b._pendingSrc, "http://jaysonknight.com/").href; } catch { continue; }
 			const url = state.media[abs];
 			if (!url) continue;
-			blocks.push({ _type: "image", _key: b._key, asset: { _type: "reference", _ref: url, url }, alt: b.alt || "" });
+			blocks.push({ _type: "image", _key: b._key, asset: { _type: "reference", _ref: url, url }, alt: b.alt || ALT_TEXT[abs] || "" });
 		} else if (b._type === "block") {
 			const nb = JSON.parse(JSON.stringify(b));
 			// the old HTML export dropped the "</" of this closing tag

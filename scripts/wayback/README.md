@@ -25,6 +25,7 @@ rebuild; the rest are regenerated and gitignored:
 | `data/out2/_state.json` | Slug to EmDash id map, uploaded-media map, and the images that could not be recovered             |
 | `data/link-map.json`  | Dead external link to its nearest Wayback snapshot, or `""` to drop the link and keep its text     |
 | `data/recoverable.json` | Images the Wayback index revealed, as input to `recover-upload.js`                                |
+| `data/alt-text.json`  | Hand-written alt text for imported images that had none, keyed by source URL; `fix-content.js` applies it |
 
 ## What each script does
 
