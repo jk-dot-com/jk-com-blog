@@ -1,6 +1,7 @@
 ---
 import type { MediaValue, ContentBylineCredit } from "emdash";
 import { Image } from "emdash/ui";
+import { scaledTo } from "../utils/image-size";
 import jkMarkUrl from "@jk-dot-com/phosphorous/assets/favicon.svg?url";
 
 interface Props {
@@ -39,7 +40,7 @@ const formattedDate = date
 		{
 			featuredImage ? (
 				<div class="card-image">
-					<Image image={featuredImage} />
+					<Image image={featuredImage} {...scaledTo(featuredImage, 800)} />
 				</div>
 			) : (
 				<div class="card-placeholder" aria-hidden="true">

@@ -8,6 +8,7 @@ import { Image } from "emdash/ui";
 import Base from "../layouts/Base.astro";
 import PostCard from "../components/PostCard.astro";
 import { chipsFor } from "../utils/chips";
+import { scaledTo } from "../utils/image-size";
 import { getReadingTime } from "../utils/reading-time";
 import { resolveBlogSiteIdentity } from "../utils/site-identity";
 
@@ -87,7 +88,7 @@ function formatDate(date: Date | null | undefined) {
 						<div class="featured-grid">
 							<a href={`/posts/${featuredPost.id}`} class="featured-image-link">
 								<div class="featured-image">
-									<Image image={featuredPost.data.featured_image} />
+									<Image image={featuredPost.data.featured_image} {...scaledTo(featuredPost.data.featured_image, 1200)} priority />
 								</div>
 							</a>
 							<div class="featured-content">

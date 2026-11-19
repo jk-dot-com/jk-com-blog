@@ -1,0 +1,122 @@
+---
+// Monthly archive: the page the sidebar "Archives" widget (core:archives) links to as /archives/YYYY/MM.
+import { getEmDashCollection, getTermsForEntries } from "emdash";
+import Base from "../../../layouts/Base.astro";
+import PostCard from "../../../components/PostCard.astro";
+import Pagination from "../../../components/Pagination.astro";
+import { chipsFor } from "../../../utils/chips";
+import { getReadingTime } from "../../../utils/reading-time";
+import { PAGE_SIZE, pageFromUrl, pageOffset } from "../../../utils/pagination";
+
+const { year = "", month = "" } = Astro.params;
+if (!/^\d{4}$/.test(year) || !/^(0[1-9]|1[0-2])$/.test(month)) return Astro.rewrite("/404");
+
+const page = pageFromUrl(Astro.url);
+// Date-only bounds compare correctly against both "2026-06-27T…" and "2026-06-27 …" stored values.
+const nextMonth = new Date(Date.UTC(Number(year), Number(month), 1)).toISOString().slice(0, 10);
+const { entries: posts, hasMore, cacheHint } = await getEmDashCollection("posts", {
+	where: { published_at: { gte: `${year}-${month}-01`, lt: nextMonth } },
+	orderBy: { published_at: "desc" },
+	limit: PAGE_SIZE,
+	offset: pageOffset(page),
+});
+
+// A month with no posts (or a page past the end) is a 404, not an empty list.
+if (posts.length === 0) return Astro.rewrite("/404");
+if (Astro.cache?.enabled) Astro.cache.set(cacheHint);
+
+const ids = posts.map((p) => p.data.id);
+const tagsByEntry = await getTermsForEntries("posts", ids, "tag");
+const categoriesByEntry = await getTermsForEntries("posts", ids, "category");
+const items = posts.map((post) => ({
+	post,
+	tags: chipsFor(tagsByEntry.get(post.data.id), categoriesByEntry.get(post.data.id)),
+}));
+
+const label = new Date(Date.UTC(Number(year), Number(month) - 1, 1)).toLocaleDateString("en-US", {
+	month: "long",
+	year: "numeric",
+	timeZone: "UTC",
+});
+---
+
+<Base title={page > 1 ? `${label}, page ${page}` : `${label} archive`} description={`Blog posts from ${label}`}>
+	<section class="archive-section">
+		<header class="archive-header">
+			<span class="archive-label">Archive</span>
+			<h1 class="archive-title">{label}</h1>
+			<p class="archive-count">{page > 1 ? `Page ${page}` : "Newest first"}</p>
+		</header>
+
+		<div class="posts-grid">
+			{
+				items.map(({ post, tags }) => (
+					<PostCard
+						title={post.data.title}
+						excerpt={post.data.excerpt}
+						featuredImage={post.data.featured_image}
+						href={`/posts/${post.id}`}
+						date={post.data.publishedAt ?? undefined}
+						readingTime={getReadingTime(post.data.content)}
+						tags={tags}
+					/>
+				))
+			}
+		</div>
+		<Pagination basePath={`/archives/${year}/${month}`} page={page} hasMore={hasMore ?? false} />
+	</section>
+</Base>
+
+<style>
+	.archive-section {
+		max-width: var(--wide-width);
+		margin: 0 auto;
+		padding: var(--spacing-12) var(--spacing-6);
+	}
+
+	.archive-header {
+		margin-bottom: var(--spacing-12);
+		padding-bottom: var(--spacing-8);
+		border-bottom: 1px solid var(--color-border-subtle);
+	}
+
+	.archive-label {
+		display: block;
+		font-size: var(--font-size-xs);
+		font-weight: 500;
+		color: var(--color-brand);
+		text-transform: uppercase;
+		letter-spacing: var(--tracking-wider);
+		margin-bottom: var(--spacing-2);
+	}
+
+	.archive-title {
+		font-size: var(--font-size-4xl);
+		font-weight: var(--font-weight-display);
+		letter-spacing: var(--tracking-tight);
+		margin-bottom: var(--spacing-2);
+	}
+
+	.archive-count {
+		font-size: var(--font-size-sm);
+		color: var(--color-muted);
+	}
+
+	.posts-grid {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: var(--spacing-12) var(--spacing-8);
+	}
+
+	@media (max-width: 900px) {
+		.posts-grid {
+			grid-template-columns: repeat(2, 1fr);
+		}
+	}
+
+	@media (max-width: 600px) {
+		.posts-grid {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

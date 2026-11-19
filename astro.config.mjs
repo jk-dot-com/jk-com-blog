@@ -24,6 +24,8 @@ export default defineConfig({
 		emdash({
 			database: d1({ binding: "DB", session: "auto" }),
 			storage: r2({ binding: "MEDIA" }),
+			// Astro records the allowed image origin at build time; without it EmDash serves every image at full size.
+			siteUrl: "https://blog.jaysonknight.com",
 			plugins: [
 				formsPlugin(),
 				// Cloudflare Email Sending; the sender must be on a domain onboarded under Email Service.
