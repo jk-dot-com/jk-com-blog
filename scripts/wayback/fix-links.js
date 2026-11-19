@@ -13,6 +13,8 @@ const UA = { "User-Agent": "Mozilla/5.0 (compatible; JKBlogAudit/1.0)" };
 // "http://https//host/x" came from markup that lost a colon: the real address is "https://host/x"
 const MALFORMED = /^https?:\/\/(https?):?\/\/?/i;
 const normalize = (h) => h.replace(MALFORMED, "$1://");
+// the crawl sees "http://host" as "http://host/" and drops "#fragments"; keep the map in that form
+const canon = (href) => { try { const u = new URL(href); u.hash = ""; return u.href; } catch { return href; } };
 const WAYBACK_WRAP = /^https:\/\/web\.archive\.org\/web\/2\//;
 
 async function pool(items, size, fn) {
@@ -53,8 +55,9 @@ async function wayback(url, date) {
 	// every link in the source posts, with the earliest post date that uses it
 	const firstDate = new Map();
 	for (const r of recs) for (const b of r.data.content) for (const d of b.markDefs || []) if (d._type === "link" && /^https?:/i.test(d.href)) {
-		const prev = firstDate.get(d.href);
-		if (!prev || r.date < prev) firstDate.set(d.href, r.date);
+		const key = canon(d.href);
+		const prev = firstDate.get(key);
+		if (!prev || r.date < prev) firstDate.set(key, r.date);
 	}
 	const crawlDead = (u) => { const e = crawl.external[u]; return e && (e.status === 404 || e.status === 410 || /ENOTFOUND|CERT|ALTNAME/.test(e.error || "")); };
 	const uncertain = (u) => { const e = crawl.external[u]; return e && /EAI_AGAIN|ETIMEDOUT|CONNECT_TIMEOUT|aborted/.test(e.error || ""); };

@@ -29,14 +29,18 @@ const LINKMAP = fs.existsSync(LINKMAP_FILE) ? JSON.parse(fs.readFileSync(LINKMAP
 // alt text written by hand for imported images that had none (source URL -> description)
 const ALT_FILE = T + "/alt-text.json";
 const ALT_TEXT = fs.existsSync(ALT_FILE) ? JSON.parse(fs.readFileSync(ALT_FILE)) : {};
+// the crawl sees "http://host" as "http://host/" and drops "#fragments", so look links up in that form
+const canon = (href) => { try { const u = new URL(href); u.hash = ""; return u.href; } catch { return href; } };
+const LINKMAP_CANON = new Map(Object.entries(LINKMAP).map(([k, v]) => [canon(k), v]));
+const fragmentOf = (href) => { try { return new URL(href).hash; } catch { return ""; } };
 const OLD_RELATIVE = /^\/(blog|jayson|files)\//i;
 const ZERO = /^https?:\/\/zerotrilogy\.gotdns\.com\//i;
 
 /** New home of an old link, or null to leave it alone. */
 function rewriteHref(raw) {
 	const href = OLD_RELATIVE.test(raw) ? "http://jaysonknight.com" + raw : raw;
-	if (raw in LINKMAP) return LINKMAP[raw];
-	if (href in LINKMAP) return LINKMAP[href];
+	const mapped = LINKMAP_CANON.get(canon(href));
+	if (mapped !== undefined) return mapped && mapped.includes("web.archive.org") ? mapped + fragmentOf(href) : mapped;
 	if (ZERO.test(href)) return `https://web.archive.org/web/2/${href}`;
 	const m = href.match(OLD_HOST);
 	if (!m) return null;
