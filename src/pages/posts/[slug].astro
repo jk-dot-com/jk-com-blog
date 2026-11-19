@@ -71,6 +71,13 @@ const bylines = post.data.bylines ?? [];
 // Get reading time
 const readingTime = getReadingTime(post.data.content);
 
+// Imported posts use the first lines of the body as their excerpt; don't print the same words twice.
+const squash = (text: string) => text.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+const bodyBlocks = (post.data.content ?? []) as Array<{ _type: string; children?: Array<{ text?: string }> }>;
+const bodyPlain = bodyBlocks.filter((b) => b._type === "block").map((b) => (b.children ?? []).map((c) => c.text ?? "").join("")).join(" ");
+const excerptStart = squash((post.data.excerpt ?? "").replace(/(…|\.\.\.)\s*$/, "")).slice(0, 80);
+const excerptRepeatsBody = excerptStart.length > 0 && squash(bodyPlain).startsWith(excerptStart);
+
 // This post's tags are already hydrated onto the entry by getEmDashEntry —
 // no extra query needed.
 const tags = post.data.terms?.tag ?? [];
@@ -220,7 +227,7 @@ const publishDate =
 					</div>
 					<h1 class="article-title" {...post.edit.title}>{post.data.title}</h1>
 					{
-						post.data.excerpt && (
+						post.data.excerpt && !excerptRepeatsBody && (
 							<p class="article-excerpt" {...post.edit.excerpt}>{post.data.excerpt}</p>
 						)
 					}
@@ -711,6 +718,15 @@ const publishDate =
 
 	.sidebar-widgets :global(.widget-search__button) {
 		display: none;
+	}
+
+	/* Sidebar categories widget: with 40+ categories, keep it compact and scrollable. */
+	.sidebar-widgets :global(.widget-categories) {
+		max-height: 18rem;
+		overflow-y: auto;
+		padding-right: var(--spacing-2);
+		scrollbar-width: thin;
+		scrollbar-color: var(--color-border) transparent;
 	}
 
 	/* Sidebar categories widget */

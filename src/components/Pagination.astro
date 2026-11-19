@@ -1,0 +1,74 @@
+---
+import { FIRST_PAGE } from "../utils/pagination";
+
+interface Props {
+	/** Path of the listing, without a query string, for example "/posts". */
+	basePath: string;
+	page: number;
+	hasMore: boolean;
+}
+
+const { basePath, page, hasMore } = Astro.props;
+const href = (target: number) => (target <= FIRST_PAGE ? basePath : `${basePath}?page=${target}`);
+---
+
+{
+	(page > FIRST_PAGE || hasMore) && (
+		<nav class="pagination" aria-label="Pagination">
+			{page > FIRST_PAGE ? (
+				<a href={href(page - 1)} rel="prev" class="pagination-link">
+					← Newer
+				</a>
+			) : (
+				<span class="pagination-link is-disabled" aria-hidden="true">
+					← Newer
+				</span>
+			)}
+			<span class="pagination-page">Page {page}</span>
+			{hasMore ? (
+				<a href={href(page + 1)} rel="next" class="pagination-link">
+					Older →
+				</a>
+			) : (
+				<span class="pagination-link is-disabled" aria-hidden="true">
+					Older →
+				</span>
+			)}
+		</nav>
+	)
+}
+
+<style>
+	.pagination {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: var(--spacing-4);
+		margin-top: var(--spacing-12);
+		padding-top: var(--spacing-6);
+		border-top: 1px solid var(--color-border-subtle);
+		font-family: var(--font-mono);
+		font-size: var(--font-size-sm);
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+	}
+
+	.pagination-link {
+		color: var(--color-cyan);
+		text-decoration: none;
+		transition: color var(--transition-fast), text-shadow var(--transition-fast);
+	}
+
+	a.pagination-link:hover {
+		color: var(--color-text);
+		text-shadow: var(--text-glow-cyan);
+	}
+
+	.pagination-link.is-disabled {
+		color: var(--color-text-ghost);
+	}
+
+	.pagination-page {
+		color: var(--color-muted);
+	}
+</style>

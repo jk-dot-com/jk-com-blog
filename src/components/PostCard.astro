@@ -1,6 +1,7 @@
 ---
 import type { MediaValue, ContentBylineCredit } from "emdash";
 import { Image } from "emdash/ui";
+import jkMarkUrl from "@jk-dot-com/phosphorous/assets/favicon.svg?url";
 
 interface Props {
 	title: string;
@@ -42,7 +43,7 @@ const formattedDate = date
 				</div>
 			) : (
 				<div class="card-placeholder" aria-hidden="true">
-					<span>{title}</span>
+					<img src={jkMarkUrl} alt="" width="56" height="56" class="placeholder-mark" />
 				</div>
 			)
 		}
@@ -161,6 +162,32 @@ const formattedDate = date
 		-webkit-line-clamp: 4;
 		-webkit-box-orient: vertical;
 		overflow: hidden;
+	}
+
+	/* Branded tile for posts without a featured image: the JK mark on the Phosphorous grid. */
+	.card-placeholder {
+		align-items: center;
+		justify-content: center;
+		padding: 0;
+		background:
+			radial-gradient(ellipse at 50% 45%, color-mix(in srgb, var(--color-cyan) 14%, transparent), transparent 65%),
+			linear-gradient(var(--grid-line) 1px, transparent 1px) 0 0 / var(--grid-size) var(--grid-size),
+			linear-gradient(90deg, var(--grid-line) 1px, transparent 1px) 0 0 / var(--grid-size) var(--grid-size),
+			var(--color-surface);
+		border: 1px solid var(--color-border-subtle);
+	}
+
+	.placeholder-mark {
+		width: 56px;
+		height: 56px;
+		opacity: 0.55;
+		filter: drop-shadow(0 0 8px rgba(0, 212, 255, 0.55));
+		transition: opacity 0.3s ease, transform 0.3s ease;
+	}
+
+	.card-link:hover .placeholder-mark {
+		opacity: 0.9;
+		transform: scale(1.06);
 	}
 
 	.card-body {

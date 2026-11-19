@@ -75,9 +75,11 @@ const { entries: pages } = await getEmDashCollection("pages");
 // Every indexable page names itself as canonical (path only, no query string or trailing slash), so
 // Google and Bing consolidate ?utm_*, ?PageIndex=* and trailing-slash variants onto one URL. Posts pass
 // their own canonical from the SEO panel; pages that opt out of indexing get none.
+const pageParam = Number(Astro.url.searchParams.get("page"));
+const pageSuffix = Number.isInteger(pageParam) && pageParam > 1 ? `?page=${pageParam}` : "";
 const selfCanonical = robots?.includes("noindex")
 	? null
-	: new URL(Astro.url.pathname.replace(/(.)\/+$/, "$1"), Astro.url.origin).href;
+	: new URL(Astro.url.pathname.replace(/(.)\/+$/, "$1") + pageSuffix, Astro.url.origin).href;
 const pageCtx = createPublicPageContext({
 	Astro,
 	kind: content ? "content" : "custom",
@@ -194,12 +196,17 @@ const isLoggedIn = !!Astro.locals.user;
 									</li>
 								))
 							}
-							<li><a href={MAIN_SITE}>JK.com (main site)</a></li>
-							<li><a href={`${MAIN_SITE}/#about`}>About</a></li>
-							<li><a href={`${MAIN_SITE}/#services`}>Services</a></li>
-							<li><a href={`${MAIN_SITE}/#portfolio`}>Portfolio</a></li>
-							<li><a href={`${MAIN_SITE}/#contact`}>Contact</a></li>
-							<li><a href={`${MAIN_SITE}/privacy`}>Privacy</a></li>
+							</ul>
+						</div>
+						<div class="footer-nav">
+							<h4 class="footer-heading">JK.com</h4>
+							<ul class="footer-links">
+								<li><a href={MAIN_SITE}>JK.com</a></li>
+								<li><a href={`${MAIN_SITE}/#about`}>About</a></li>
+								<li><a href={`${MAIN_SITE}/#services`}>Services</a></li>
+								<li><a href={`${MAIN_SITE}/#portfolio`}>Portfolio</a></li>
+								<li><a href={`${MAIN_SITE}/#contact`}>Contact</a></li>
+								<li><a href={`${MAIN_SITE}/privacy`}>Privacy</a></li>
 						</ul>
 					</div>
 					<div class="footer-nav">
@@ -753,7 +760,7 @@ const isLoggedIn = !!Astro.locals.user;
 
 			.footer-grid {
 				display: grid;
-				grid-template-columns: 2fr 1fr 1fr 1fr;
+				grid-template-columns: 1.6fr 1fr 1fr 1fr 1.3fr;
 				gap: var(--spacing-12);
 				margin-bottom: var(--spacing-12);
 			}
@@ -926,25 +933,32 @@ const isLoggedIn = !!Astro.locals.user;
 					padding: var(--spacing-3) var(--spacing-4);
 				}
 
-					.brand {
-						grid-column: 1;
-						grid-row: 1;
-					}
+									.brand {
+					grid-column: 1;
+					grid-row: 1;
+				}
 
-					.brand-blog,
-					.brand-sep {
-						display: none;
-					}
+				.brand-blog,
+				.brand-sep {
+					display: none;
+				}
 
-.nav-right {
-					grid-column: 1 / -1;
-					grid-row: 2;
-					display: grid;
-					row-gap: var(--spacing-2);
+				/* children of .nav-right join the .nav grid so nav links sit beside the brand */
+				.nav-right {
+					display: contents;
+				}
+
+				.nav-links {
+					grid-column: 2;
+					grid-row: 1;
+					justify-self: end;
+					display: flex;
+					column-gap: var(--spacing-4);
 				}
 
 				.site-search {
-					grid-column: 1;
+					grid-column: 1 / -1;
+					grid-row: 2;
 					width: 100%;
 					max-width: none;
 				}
@@ -955,19 +969,9 @@ const isLoggedIn = !!Astro.locals.user;
 					font-size: var(--font-size-sm) !important;
 				}
 
-				.nav-links {
-					grid-column: 1;
-					display: flex;
-					column-gap: var(--spacing-3);
-					row-gap: var(--spacing-1);
-					flex-wrap: wrap;
-					justify-content: flex-start;
-				}
-
 				.nav-admin {
-					grid-column: 2;
-					grid-row: 1;
-					justify-self: end;
+					grid-column: 1 / -1;
+					grid-row: 3;
 					font-size: var(--font-size-xs);
 					margin-inline-start: 0;
 					white-space: nowrap;

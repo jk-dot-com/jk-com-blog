@@ -2,12 +2,20 @@
 import { getEmDashCollection, getTermsForEntries } from "emdash";
 import Base from "../../layouts/Base.astro";
 import { getReadingTime } from "../../utils/reading-time";
+import Pagination from "../../components/Pagination.astro";
+import { PAGE_SIZE, pageFromUrl, pageOffset } from "../../utils/pagination";
 
 // Sort in the database rather than in JS — lets the DB use its index on
 // published_at and avoids a full-table scan on the client.
-const { entries: posts, cacheHint } = await getEmDashCollection("posts", {
+const page = pageFromUrl(Astro.url);
+const { entries: posts, hasMore, cacheHint } = await getEmDashCollection("posts", {
 	orderBy: { published_at: "desc" },
+	limit: PAGE_SIZE,
+	offset: pageOffset(page),
 });
+
+// A page past the end is a 404, not an empty list.
+if (page > 1 && posts.length === 0) return Astro.rewrite("/404");
 
 if (Astro.cache?.enabled) Astro.cache.set(cacheHint);
 
@@ -34,13 +42,12 @@ const formatDate = (date: Date) =>
 	});
 ---
 
-<Base title="All Posts" description="Browse all blog posts">
+<Base title={page > 1 ? `All Posts, page ${page}` : "All Posts"} description="Browse all blog posts">
 	<div class="posts-page">
 		<header class="page-header">
 			<h1 class="page-title">All Posts</h1>
 			<p class="page-description">
-				{posts.length}
-				{posts.length === 1 ? "article" : "articles"}
+				{page > 1 ? `Page ${page}` : "Newest first"}
 			</p>
 		</header>
 
@@ -105,6 +112,7 @@ const formatDate = (date: Date) =>
 				</div>
 			)
 		}
+		<Pagination basePath="/posts" page={page} hasMore={hasMore ?? false} />
 	</div>
 </Base>
 
