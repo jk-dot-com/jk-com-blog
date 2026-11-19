@@ -60,6 +60,8 @@ This template ships with `.mcp.json`, `.cursor/mcp.json`, and `.vscode/mcp.json`
 - The old WordPress `/YYYY/MM/DD/slug` permalinks and the attachment-page 410s are EmDash rules. A Cloudflare Transform rule rewrites `/jayson/*` to `/` except `/jayson/archive/*`.
 - Writing posts through the API can trip Cloudflare's managed rule "DotNetNuke - File Inclusion" on bodies that mention ASP.NET paths (it returns a Cloudflare 403 page). The Free plan can only skip the whole managed phase, not that one rule. Ask before adding such a skip rule, and remove it afterwards.
 - API edits (`PUT /content/posts/:id`) save a draft revision; `POST .../publish` is needed for the public page to change.
+- `PUT /_emdash/api/schema/collections/<slug>` replaces `supports` outright. Read the collection first (it's under `data.item`), merge, then PUT, or you will drop drafts/revisions/search. Re-enable search with `POST /_emdash/api/search/enable {collection, enabled:true}` if it was switched off.
+- Sitemaps: `/sitemap.xml` is an index of `/sitemap-<collection>.xml` for each collection with SEO enabled (posts, pages). `jaysonknight.com/sitemap-index.xml` (main-site repo) lists these child sitemaps. Every indexable page gets a self canonical from `Base.astro`.
 
 ## Windows gotchas
 
