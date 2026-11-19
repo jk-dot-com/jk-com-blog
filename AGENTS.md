@@ -54,6 +54,13 @@ This template ships with `.mcp.json`, `.cursor/mcp.json`, and `.vscode/mcp.json`
 - Code blocks are `{_type:"code", code, language?, filename?}`; images are `{provider,id,src,alt}` with src `/_emdash/api/media/file/<storage_key>`.
 - WordPress import flattened some posts (stray CSS/script text, whole articles in one paragraph, code newlines lost). Check for blocks over 3000 chars before trusting imported content.
 
+## Redirects
+
+- EmDash redirect rules (admin **Redirects**, REST `/_emdash/api/redirects`) skip any path ending in a file extension, so `.aspx`, `.php` and `.js` URLs can't use them. Old Community Server URLs (`/blog/archive/...`, `/jayson/archive/...`) are static rules in `public/_redirects` (limit 2,000 static rules; format `<source> <destination> 301`). Add new extension-path redirects there.
+- The old WordPress `/YYYY/MM/DD/slug` permalinks and the attachment-page 410s are EmDash rules. A Cloudflare Transform rule rewrites `/jayson/*` to `/` except `/jayson/archive/*`.
+- Writing posts through the API can trip Cloudflare's managed rule "DotNetNuke - File Inclusion" on bodies that mention ASP.NET paths (it returns a Cloudflare 403 page). The Free plan can only skip the whole managed phase, not that one rule. Ask before adding such a skip rule, and remove it afterwards.
+- API edits (`PUT /content/posts/:id`) save a draft revision; `POST .../publish` is needed for the public page to change.
+
 ## Windows gotchas
 
 - Git Bash rewrites args starting with `/` (curl paths); use `MSYS_NO_PATHCONV=1` or a node script.
