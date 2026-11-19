@@ -72,6 +72,12 @@ const { entries: pages } = await getEmDashCollection("pages");
 
 // Build public page context for plugin contributions
 // SEO data is passed here and rendered securely by EmDashHead
+// Every indexable page names itself as canonical (path only, no query string or trailing slash), so
+// Google and Bing consolidate ?utm_*, ?PageIndex=* and trailing-slash variants onto one URL. Posts pass
+// their own canonical from the SEO panel; pages that opt out of indexing get none.
+const selfCanonical = robots?.includes("noindex")
+	? null
+	: new URL(Astro.url.pathname.replace(/(.)\/+$/, "$1"), Astro.url.origin).href;
 const pageCtx = createPublicPageContext({
 	Astro,
 	kind: content ? "content" : "custom",
@@ -79,7 +85,7 @@ const pageCtx = createPublicPageContext({
 	title: fullTitle,
 	pageTitle: pageTitle ?? title,
 	description,
-	canonical,
+	canonical: canonical ?? selfCanonical,
 	image,
 	content,
 	seo: { ogImage: image, robots },
