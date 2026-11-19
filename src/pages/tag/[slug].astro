@@ -7,6 +7,7 @@ import {
 } from "emdash";
 import Base from "../../layouts/Base.astro";
 import PostCard from "../../components/PostCard.astro";
+import { chipsFor } from "../../utils/chips";
 import { getReadingTime } from "../../utils/reading-time";
 import Pagination from "../../components/Pagination.astro";
 import { PAGE_SIZE, pageFromUrl, pageOffset } from "../../utils/pagination";
@@ -38,11 +39,16 @@ const tagsByEntry = await getTermsForEntries(
 	posts.map((p) => p.data.id),
 	"tag",
 );
+const categoriesByEntry = await getTermsForEntries(
+	"posts",
+	posts.map((p) => p.data.id),
+	"category",
+);
 // Term counts cover the whole archive; the page only holds one slice of it.
 const postCount = term.count ?? posts.length;
 const filteredPosts = posts.map((post) => ({
 	post,
-	tags: tagsByEntry.get(post.data.id) ?? [],
+	tags: chipsFor(tagsByEntry.get(post.data.id), categoriesByEntry.get(post.data.id)),
 }));
 ---
 
@@ -72,7 +78,7 @@ const filteredPosts = posts.map((post) => ({
 							href={`/posts/${post.id}`}
 							date={post.data.publishedAt ?? undefined}
 							readingTime={getReadingTime(post.data.content)}
-							tags={tags.map((t) => ({ slug: t.slug, label: t.label }))}
+							tags={tags}
 						/>
 					))}
 				</div>

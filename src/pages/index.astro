@@ -7,6 +7,7 @@ import {
 import { Image } from "emdash/ui";
 import Base from "../layouts/Base.astro";
 import PostCard from "../components/PostCard.astro";
+import { chipsFor } from "../utils/chips";
 import { getReadingTime } from "../utils/reading-time";
 import { resolveBlogSiteIdentity } from "../utils/site-identity";
 
@@ -44,21 +45,16 @@ const tagEntryIds = [
 	...gridPosts.map((p) => p.data.id),
 ];
 const tagsByEntry = await getTermsForEntries("posts", tagEntryIds, "tag");
+const categoriesByEntry = await getTermsForEntries("posts", tagEntryIds, "category");
 
 const featuredTags = featuredPost
-	? (tagsByEntry.get(featuredPost.data.id) ?? []).map((t) => ({
-			slug: t.slug,
-			label: t.label,
-		}))
+	? chipsFor(tagsByEntry.get(featuredPost.data.id), categoriesByEntry.get(featuredPost.data.id))
 	: [];
 const featuredBylines = featuredPost?.data.bylines ?? [];
 
 const gridPostsWithTags = gridPosts.map((post) => ({
 	post,
-	tags: (tagsByEntry.get(post.data.id) ?? []).map((t) => ({
-		slug: t.slug,
-		label: t.label,
-	})),
+	tags: chipsFor(tagsByEntry.get(post.data.id), categoriesByEntry.get(post.data.id)),
 	bylines: post.data.bylines ?? [],
 }));
 
@@ -145,7 +141,7 @@ function formatDate(date: Date | null | undefined) {
 								{featuredTags.length > 0 && (
 									<div class="featured-tags">
 										{featuredTags.map((tag) => (
-											<a href={`/tag/${tag.slug}`} class="featured-tag">
+											<a href={tag.href} class="featured-tag">
 												{tag.label}
 											</a>
 										))}

@@ -10,7 +10,7 @@ interface Props {
 	href: string;
 	date?: Date;
 	readingTime?: number;
-	tags?: Array<{ slug: string; label: string }>;
+	tags?: Array<{ slug: string; label: string; href?: string }>;
 	bylines?: ContentBylineCredit[];
 }
 
@@ -100,7 +100,7 @@ const formattedDate = date
 		tags && tags.length > 0 && (
 			<div class="card-tags">
 				{tags.slice(0, 2).map((tag) => (
-					<a href={`/tag/${tag.slug}`} class="card-tag">
+					<a href={tag.href ?? `/tag/${tag.slug}`} class="card-tag">
 						{tag.label}
 					</a>
 				))}
@@ -181,8 +181,8 @@ const formattedDate = date
 		width: 56px;
 		height: 56px;
 		opacity: 0.55;
-		filter: drop-shadow(0 0 8px rgba(0, 212, 255, 0.55));
-		transition: opacity 0.3s ease, transform 0.3s ease;
+		filter: var(--filter-logo-glow);
+		transition: opacity var(--duration-normal) ease, transform var(--duration-normal) ease;
 	}
 
 	.card-link:hover .placeholder-mark {

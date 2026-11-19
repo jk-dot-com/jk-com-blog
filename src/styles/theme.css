@@ -47,9 +47,11 @@
 	--tracking-wider: var(--tracking-widest);
 
 	--radius: var(--radius-sm);
-	--shadow-sm: 0 1px 8px rgba(0, 0, 0, 0.5);
+	--shadow-sm: var(--glow-cyan-sm);
 	--shadow-lg: var(--shadow-panel);
 	--wide-width: var(--max-content);
+	/* The JK mark's phosphor glow (a filter, so it follows the glyph's shape). */
+	--filter-logo-glow: drop-shadow(0 0 6px color-mix(in srgb, var(--color-cyan) 60%, transparent));
 
 	--emdash-search-bg: var(--color-surface);
 	--emdash-search-hover: var(--tint-cyan);
@@ -98,43 +100,53 @@ body {
 	background: var(--tint-cyan);
 }
 
-/* Back-link to the main website: the same JK.com mark and wordmark as the landing page header. */
-.main-site-link {
+/* Tag and category links are Phosphorous chips: mono, uppercase, cyan on a faint tint, glow on hover. */
+.post-card .card-tags .card-tag,
+.posts-list .post-tags .post-tag,
+.meta-block .meta-tags .meta-tag,
+.featured-content .featured-tags .featured-tag,
+.article-sidebar .sidebar-widgets .widget-tags__cloud .widget-tags__link {
 	display: inline-flex;
 	align-items: center;
-	gap: var(--space-2);
-	margin-inline-end: var(--space-4);
-	padding-inline-end: var(--space-4);
-	border-inline-end: 1px solid var(--color-border);
-	font-family: var(--font-heading);
-	font-weight: var(--weight-black);
-	font-size: var(--text-lg);
-	letter-spacing: var(--tracking-tight);
-	color: var(--color-text);
+	padding: var(--space-1) var(--space-3);
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius-pill);
+	background: var(--tint-cyan);
+	color: var(--color-cyan);
+	font-family: var(--font-mono);
+	font-size: var(--text-xs);
+	letter-spacing: var(--tracking-mono);
+	text-transform: uppercase;
 	text-decoration: none;
+	transition:
+		border-color var(--duration-fast) ease,
+		box-shadow var(--duration-fast) ease;
 }
 
-.main-site-link img {
-	filter: drop-shadow(0 0 6px rgba(0, 212, 255, 0.6));
-	transition: transform var(--duration-normal) ease;
+.post-card .card-tags .card-tag:hover,
+.posts-list .post-tags .post-tag:hover,
+.meta-block .meta-tags .meta-tag:hover,
+.featured-content .featured-tags .featured-tag:hover,
+.article-sidebar .sidebar-widgets .widget-tags__cloud .widget-tags__link:hover {
+	border-color: var(--color-cyan);
+	background: var(--tint-cyan);
+	box-shadow: var(--glow-cyan-sm);
+	color: var(--color-cyan);
 }
 
-.main-site-link:hover img {
-	transform: scale(1.1);
-}
-
-/* Narrow screens: keep just the mark so the nav still fits. */
-@media (max-width: 640px) {
-	.main-site-link-text {
-		display: none;
+/* Motion is decorative: switch it off for people who ask for less. */
+@media (prefers-reduced-motion: reduce) {
+	.brand-mark,
+	.placeholder-mark,
+	.post-card .card-link .card-image,
+	.post-card .card-link .card-placeholder,
+	.card-image img {
+		transition: none;
 	}
 
-	.main-site-link {
-		margin-inline-end: var(--space-3);
-		padding-inline-end: var(--space-3);
+	.brand-main:hover .brand-mark,
+	.card-link:hover .card-image img,
+	.card-link:hover .placeholder-mark {
+		transform: none;
 	}
-}
-
-.nav-admin {
-	margin-inline-start: var(--spacing-5);
 }

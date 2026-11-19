@@ -2,6 +2,7 @@
 import { getEmDashCollection, getTermsForEntries } from "emdash";
 import Base from "../../layouts/Base.astro";
 import { getReadingTime } from "../../utils/reading-time";
+import { chipsFor } from "../../utils/chips";
 import Pagination from "../../components/Pagination.astro";
 import { PAGE_SIZE, pageFromUrl, pageOffset } from "../../utils/pagination";
 
@@ -27,10 +28,15 @@ const tagsByEntry = await getTermsForEntries(
 	posts.map((p) => p.data.id),
 	"tag",
 );
+const categoriesByEntry = await getTermsForEntries(
+	"posts",
+	posts.map((p) => p.data.id),
+	"category",
+);
 
 const postsWithTags = posts.map((post) => ({
 	post,
-	tags: tagsByEntry.get(post.data.id) ?? [],
+	tags: chipsFor(tagsByEntry.get(post.data.id), categoriesByEntry.get(post.data.id)),
 	bylines: post.data.bylines ?? [],
 }));
 
@@ -101,7 +107,7 @@ const formatDate = (date: Date) =>
 							{tags.length > 0 && (
 								<div class="post-tags">
 									{tags.slice(0, 3).map((t) => (
-										<a href={`/tag/${t.slug}`} class="post-tag">
+										<a href={t.href} class="post-tag">
 											{t.label}
 										</a>
 									))}

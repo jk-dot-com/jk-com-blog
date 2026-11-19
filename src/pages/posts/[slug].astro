@@ -81,6 +81,7 @@ const excerptRepeatsBody = excerptStart.length > 0 && squash(bodyPlain).startsWi
 // This post's tags are already hydrated onto the entry by getEmDashEntry —
 // no extra query needed.
 const tags = post.data.terms?.tag ?? [];
+const categories = post.data.terms?.category ?? [];
 
 // Fetch a few extra recent posts in case the current post is among them.
 const { entries: recentPosts } = await getEmDashCollection("posts", {
@@ -179,6 +180,20 @@ const publishDate =
 						<span class="meta-label">Reading time</span>
 						<span class="meta-value">{readingTime} min</span>
 					</div>
+					{
+						categories.length > 0 && (
+							<div class="meta-block">
+								<span class="meta-label">Filed under</span>
+								<div class="meta-tags">
+									{categories.map((c) => (
+										<a href={`/category/${c.slug}`} class="meta-tag">
+											{c.label}
+										</a>
+									))}
+								</div>
+							</div>
+						)
+					}
 					{
 						tags.length > 0 && (
 							<div class="meta-block">
