@@ -40,6 +40,9 @@ jobs:
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
 
+          # Must match the startsWith() checks in the job condition above (default is @claude).
+          trigger_phrase: '/claude'
+
           # This is an optional setting that allows Claude to read CI results on PRs
           additional_permissions: |
             actions: read
@@ -48,7 +51,7 @@ jobs:
           # prompt: 'Update the pull request description to include a summary of changes.'
 
           # acceptEdits denies shell commands that no rule allows (the action adds its own
-          # git rules for @claude mentions), instead of leaving them to auto mode's review.
+          # git rules for /claude requests), instead of leaving them to auto mode's review.
           claude_args: '--permission-mode acceptEdits --disallowedTools "WebFetch,WebSearch"'
 
           # See https://github.com/anthropics/claude-code-action/blob/main/docs/usage.md
