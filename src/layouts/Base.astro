@@ -157,6 +157,15 @@ const isLoggedIn = !!Astro.locals.user;
 							))
 						}
 					</div>
+					<a
+						href="https://calendly.com/jaysonknight"
+						target="_blank"
+						rel="noopener noreferrer"
+						class="btn btn-red nav-cta"
+						aria-label="Book a meeting via Calendly"
+					>
+						Book Me
+					</a>
 				</div>
 				{
 					isLoggedIn && (
@@ -491,10 +500,11 @@ const isLoggedIn = !!Astro.locals.user;
 				position: sticky;
 				top: 0;
 				z-index: 100;
-				background: color-mix(in srgb, var(--color-bg) 65%, transparent);
+				background: color-mix(in srgb, var(--color-bg) 92%, transparent);
 				backdrop-filter: blur(12px);
 				-webkit-backdrop-filter: blur(12px);
-				border-bottom: 1px solid var(--color-border-subtle);
+				border-bottom: 1px solid var(--color-border);
+				box-shadow: var(--shadow-header);
 			}
 
 			.nav {
@@ -504,7 +514,7 @@ const isLoggedIn = !!Astro.locals.user;
 				max-width: var(--wide-width);
 				margin: 0 auto;
 				padding: var(--spacing-4) var(--spacing-6);
-				height: var(--nav-height);
+				height: var(--header-height);
 			}
 
 			.brand {
@@ -568,6 +578,16 @@ const isLoggedIn = !!Astro.locals.user;
 				margin-inline-start: auto;
 			}
 
+			.nav-cta {
+				padding: 0.4rem 1rem;
+				font-size: 0.8rem;
+				color: #fff;
+			}
+
+			.nav-cta:hover {
+				color: #fff;
+			}
+
 			.nav-links {
 				display: flex;
 				gap: var(--spacing-5);
@@ -595,7 +615,7 @@ const isLoggedIn = !!Astro.locals.user;
 				}
 
 				.nav-link:hover {
-					color: var(--color-text);
+					color: var(--color-cyan);
 				}
 
 				.nav-link:hover::after {
@@ -636,7 +656,7 @@ const isLoggedIn = !!Astro.locals.user;
 			}
 
 			.nav-admin:hover {
-				color: var(--color-text);
+				color: var(--color-cyan);
 			}
 
 			/* Search styling */
@@ -748,8 +768,8 @@ const isLoggedIn = !!Astro.locals.user;
 
 			/* Footer */
 			.site-footer {
-				background: var(--color-bg-subtle);
-				border-top: 1px solid var(--color-border-subtle);
+				background: var(--color-surface);
+				border-top: 1px solid var(--color-border);
 			}
 
 			.footer-inner {
@@ -800,10 +820,11 @@ const isLoggedIn = !!Astro.locals.user;
 			}
 
 			.footer-heading {
-				font-size: var(--font-size-xs);
-				font-weight: 500;
+				font-family: var(--font-mono);
+				font-size: var(--text-xs);
+				font-weight: 400;
 				text-transform: uppercase;
-				letter-spacing: var(--tracking-wider);
+				letter-spacing: var(--tracking-widest);
 				color: var(--color-muted);
 				margin-bottom: var(--spacing-4);
 			}
@@ -824,7 +845,7 @@ const isLoggedIn = !!Astro.locals.user;
 			}
 
 			.footer-links a:hover {
-				color: var(--color-text);
+				color: var(--color-cyan);
 			}
 
 			.footer-widgets-section :global(.widget-area) {
@@ -859,12 +880,17 @@ const isLoggedIn = !!Astro.locals.user;
 			}
 
 			.footer-copyright {
-				font-size: var(--font-size-sm);
+				font-family: var(--font-mono);
+				font-size: var(--text-xs);
 				color: var(--color-muted);
 			}
 
 			.footer-copyright a {
 				color: var(--color-text-secondary);
+			}
+
+			.footer-copyright a:hover {
+				color: var(--color-cyan);
 			}
 
 			/* Theme switcher */
@@ -967,6 +993,10 @@ const isLoggedIn = !!Astro.locals.user;
 					width: 100% !important;
 					padding: var(--spacing-1) var(--spacing-2) !important;
 					font-size: var(--font-size-sm) !important;
+				}
+
+				.nav-cta {
+					display: none;
 				}
 
 				.nav-admin {
