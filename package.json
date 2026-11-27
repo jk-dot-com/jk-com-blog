@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@astrojs/cloudflare": "^14.4.9",
-    "@astrojs/react": "^6.0.5",
+    "@astrojs/react": "^7.1.9",
     "@emdash-cms/cloudflare": "^1.6.0",
     "@emdash-cms/plugin-ai-search": "^0.1.2",
     "@emdash-cms/plugin-embeds": "^0.1.60",
@@ -29,7 +29,7 @@
     "@tagperfect/emdash-plugin-indexnow": "^1.2.6",
     "astro": "^7.4.13",
     "emdash": "^1.6.0",
-    "emdash-better-auth": "^0.16.0",
+    "emdash-better-auth": "^0.17.1",
     "mermaid": "^12.3.0",
     "react": "19.3.1",
     "react-dom": "19.3.1"
