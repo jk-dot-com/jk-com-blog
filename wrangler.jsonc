@@ -20,6 +20,14 @@
 			"preview_bucket_name": "my-emdash-media",
 		},
 	],
+	// Astro session store (@astrojs/cloudflare adds a SESSION binding automatically). Pin the id:
+	// `wrangler preview` (branch builds) doesn't auto-provision KV and fails with error 10021
+	// without it; the production deploy already uses this namespace.
+	"kv_namespaces": [{ "binding": "SESSION", "id": "572a7a1bf0ef4f03b617f73f20dca857" }],
+	// `wrangler preview` reads bindings from `previews`; the adapter adds SESSION there without an id.
+	"previews": {
+		"kv_namespaces": [{ "binding": "SESSION", "id": "572a7a1bf0ef4f03b617f73f20dca857" }],
+	},
 	// Co-editing rooms
 	"durable_objects": {
 		"bindings": [{ "name": "EMDASH_ROOMS", "class_name": "EmDashRoom" }],
