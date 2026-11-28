@@ -54,7 +54,7 @@ const filteredPosts = posts.map((post) => ({
 
 <Base
 	title={`Posts tagged "${term.label}"`}
-	description={`All posts tagged with ${term.label}`}
+	description={`${postCount} ${postCount === 1 ? "post" : "posts"} tagged ${term.label} on Jayson Knight's blog about software architecture and development.`}
 >
 	<section class="archive-section">
 		<header class="archive-header">

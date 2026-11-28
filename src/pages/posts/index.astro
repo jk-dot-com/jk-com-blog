@@ -48,7 +48,7 @@ const formatDate = (date: Date) =>
 	});
 ---
 
-<Base title={page > 1 ? `All Posts, page ${page}` : "All Posts"} description="Browse all blog posts">
+<Base title={page > 1 ? `All Posts, page ${page}` : "All Posts"} description={`${page > 1 ? `Page ${page}: a` : "A"}ll posts by Jayson Knight on software architecture and development, from 2003 onward.`}>
 	<div class="posts-page">
 		<header class="page-header">
 			<h1 class="page-title">All Posts</h1>

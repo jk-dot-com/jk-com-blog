@@ -59,12 +59,17 @@ function getImageUrl(img: unknown): string | undefined {
 const featuredImageUrl = getImageUrl(post.data.featured_image);
 const { siteTitle } = resolveBlogSiteIdentity(await getSiteSettings());
 
+const bodyBlocks = (post.data.content ?? []) as Array<{ _type: string; children?: Array<{ text?: string }> }>;
+const bodyPlain = bodyBlocks.filter((b) => b._type === "block").map((b) => (b.children ?? []).map((c) => c.text ?? "").join("")).join(" ");
+
 // Generate SEO meta from content
 const seo = getSeoMeta(post, {
 	siteTitle,
 	siteUrl: Astro.url.origin,
 	path: Astro.url.pathname.replace(/\/$/, ""),
 	defaultOgImage: featuredImageUrl,
+	// Used when the SEO panel is empty; the raw excerpt runs past what search engines show.
+	defaultDescription: descriptionFromText(post.data.excerpt || bodyPlain),
 });
 
 // Bylines are already hydrated by getEmDashEntry
@@ -75,8 +80,6 @@ const readingTime = getReadingTime(post.data.content);
 
 // Imported posts use the first lines of the body as their excerpt; don't print the same words twice.
 const squash = (text: string) => text.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
-const bodyBlocks = (post.data.content ?? []) as Array<{ _type: string; children?: Array<{ text?: string }> }>;
-const bodyPlain = bodyBlocks.filter((b) => b._type === "block").map((b) => (b.children ?? []).map((c) => c.text ?? "").join("")).join(" ");
 const excerptStart = squash((post.data.excerpt ?? "").replace(/(…|\.\.\.)\s*$/, "")).slice(0, 80);
 const excerptRepeatsBody = excerptStart.length > 0 && squash(bodyPlain).startsWith(excerptStart);
 
@@ -116,7 +119,7 @@ const publishDate =
 <Base
 	title={seo.title}
 	pageTitle={seo.ogTitle}
-	description={seo.description || descriptionFromText(bodyPlain)}
+	description={seo.description}
 	image={seo.ogImage}
 	canonical={seo.canonical}
 	robots={seo.robots}

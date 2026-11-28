@@ -40,7 +40,7 @@ const label = new Date(Date.UTC(Number(year), Number(month) - 1, 1)).toLocaleDat
 });
 ---
 
-<Base title={page > 1 ? `${label}, page ${page}` : `${label} archive`} description={`Blog posts from ${label}`}>
+<Base title={page > 1 ? `${label}, page ${page}` : `${label} archive`} description={`${page > 1 ? `Page ${page} of posts` : "Posts"} from ${label} on Jayson Knight's blog about software architecture and development.`}>
 	<section class="archive-section">
 		<header class="archive-header">
 			<span class="archive-label">Archive</span>
